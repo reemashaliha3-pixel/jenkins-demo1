@@ -1,0 +1,444 @@
+target/
+
+pipeline {
+    agent any
+
+    // These names must match Manage Jenkins > Tools
+    tools {<?xmltarget/
+
+pipeline {
+    agent any
+
+    // These names must match Manage Jenkins > Tools
+    tools {
+        maven 'Maven-3.9'
+        jdk   'JDK-17'
+    }
+
+    options {
+        timestamps()
+        timeout(time: 15, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    // Checks GitHub for new commits every 5 minutes
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'mvn -B clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'mvn -B test'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                bat 'mvn -B package -DskipTests'
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build succeeded.'
+        }
+        failure {
+            echo 'Build failed. Check the console output.'
+        }
+    }
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.demo</groupId>
+  <artifactId>jenkins-demo</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+# jenkins-demo
+
+Sample Java (Maven) project used to demonstrate an automated Jenkins CI pipeline.
+
+Pipeline stages: Checkout -> Build -> Test -> Package -> Archive
+ version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.demo</groupId>
+  <artifactId>jenkins-demo</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+# jenkins-demo
+
+Sample Java (Maven) project used to demonstrate an automated Jenkins CI pipeline.
+
+Pipeline stages: Checkout -> Build -> Test -> Package -> Archive
+
+target/
+
+pipeline {
+    agent any
+
+    // These names must match Manage Jenkins > Tools
+    tools {
+        maven 'Maven-3.9'
+        jdk   'JDK-17'
+    }
+
+    options {
+        timestamps()
+        timeout(time: 15, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    // Checks GitHub for new commits every 5 minutes
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'mvn -B clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'mvn -B test'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                bat 'mvn -B package -DskipTests'
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build succeeded.'
+        }
+        failure {
+            echo 'Build failed. Check the console output.'
+        }
+    }
+}
+
+        maven 'Maven-3.9'
+        jdk   'JDK-17'
+    }
+
+    options {
+        timestamps()
+        timeout(time: 15, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }pipeline {
+    agent any
+
+    // These names must match Manage Jenkins > Tools
+    tools {
+        maven 'Maven-3.9'
+        jdk   'JDK-17'
+    }
+
+    options {
+        timestamps()
+        timeout(time: 15, unit: 'MINUTES')
+        buildDiscarder(logRotator(numToKeepStr: '10'))
+    }
+
+    // Checks GitHub for new commits every 5 minutes
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'mvn -B clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'mvn -B test'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                bat 'mvn -B package -DskipTests'
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build succeeded.'
+        }
+        failure {
+            echo 'Build failed. Check the console output.'
+        }
+    }
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.demo</groupId>
+  <artifactId>jenkins-demo</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+# jenkins-demo
+
+Sample Java (Maven) project used to demonstrate an automated Jenkins CI pipeline.
+
+Pipeline stages: Checkout -> Build -> Test -> Package -> Archive
+
+target/
+
+
+    // Checks GitHub for new commits every 5 minutes
+    triggers {
+        pollSCM('H/5 * * * *')
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                bat 'mvn -B clean compile'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'mvn -B test'
+            }
+            post {
+                always {
+                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+                }
+            }
+        }
+
+        stage('Package') {
+            steps {
+                bat 'mvn -B package -DskipTests'
+            }
+        }
+
+        stage('Archive') {
+            steps {
+                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Build succeeded.'
+        }
+        failure {
+            echo 'Build failed. Check the console output.'
+        }
+    }
+}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.demo</groupId>
+  <artifactId>jenkins-demo</artifactId>
+  <version>1.0</version>
+  <packaging>jar</packaging>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter</artifactId>
+      <version>5.10.2</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.2.5</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+
+# jenkins-demo
+
+Sample Java (Maven) project used to demonstrate an automated Jenkins CI pipeline.
+
+Pipeline stages: Checkout -> Build -> Test -> Package -> Archive
